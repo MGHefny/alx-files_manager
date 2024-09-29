@@ -16,14 +16,14 @@ class UsersController {
     const hashapass = sha1(password);
 
     try {
-      const collection = dbClient.db.collection('users');
-      const infoU = await collection.findOne({ email });
+      const allData = dbClient.db.collection('users');
+      const infoU = await allData.findOne({ email });
 
       if (infoU) {
         res.status(400).json({ error: 'Already exist' });
       } else {
-        collection.insertOne({ email, password: hashapass });
-        const Nuser = await collection.findOne(
+        allData.insertOne({ email, password: hashapass });
+        const Nuser = await allData.findOne(
           { email }, { projection: { email: 1 } },
         );
         res.status(201).json({ id: Nuser._id, email: Nuser.email });
