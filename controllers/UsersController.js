@@ -26,7 +26,7 @@ class UsersController {
         const Nuser = await allData.findOne(
           { email }, { projection: { email: 1 } },
         );
-        res.status(201).json({ id: Nuser.id , email: Nuser.email });
+        res.status(201).json({ id: Nuser._id , email: Nuser.email });
       }
     } catch (error) {
       console.log(error);
