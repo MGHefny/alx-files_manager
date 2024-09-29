@@ -1,3 +1,4 @@
+/*Create a new user*/
 import sha1 from 'sha1';
 import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
@@ -22,7 +23,7 @@ class UsersController {
       if (infoU) {
         res.status(400).json({ error: 'Already exist' });
       } else {
-        allData.insertOne({ email, password: hashapass });
+        await allData.insertOne({ email, password: hashapass });
         const Nuser = await allData.findOne(
           { email }, { projection: { email: 1 } },
         );
@@ -34,7 +35,7 @@ class UsersController {
     }
   }
 
-  /*static async getMe(req, res) {
+  static async getMe(req, res) {
     try {
       const TokUser = req.header('X-Token');
       const UKey = `auth_${TokUser}`;
@@ -48,7 +49,7 @@ class UsersController {
       console.log(error);
       res.status(500).json({ error: 'error server not res' });
     }
-  }*/
+  }
 }
 
 export default UsersController;
