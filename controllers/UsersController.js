@@ -23,9 +23,9 @@ class UsersController {
       if (infoU) {
         res.status(400).json({ error: 'Already exist' });
       } else {
-        await allData.insertOne({ email, password: hashapass });
-        
-        res.status(201).json({ id: Nuser._id, email: Nuser.email });
+        await allData.insertOne({ email, password: hashapass }).then((output) => {
+          res.status(201).json({ id: output.insertedId, email });
+        });
       }
     } catch (error) {
       console.log(error);
