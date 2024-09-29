@@ -22,7 +22,7 @@ class UsersController {
       if (infoU) {
         res.status(400).json({ error: 'Already exist' });
       } else {
-        allData.addU({ email, password: hashapass });
+        allData.insertOne({ email, password: hashapass });
         const newUser = await allData.findOne(
           { email }, { projection: { email: 1 } },
         );
