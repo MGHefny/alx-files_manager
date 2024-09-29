@@ -1,4 +1,4 @@
-/*Create a new user*/
+/* Create a new user */
 import sha1 from 'sha1';
 import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
@@ -17,7 +17,7 @@ class UsersController {
     const hashapass = sha1(password);
 
     try {
-      const allData = dbClient.db.collection('users');
+      const allData = dbClient.collection('users');
       const infoU = await allData.findOne({ email });
 
       if (infoU) {
@@ -27,7 +27,7 @@ class UsersController {
         const Nuser = await allData.findOne(
           { email }, { projection: { email: 1 } },
         );
-        res.status(201).json({ id: Nuser._id , email: Nuser.email });
+        res.status(201).json({ id: Nuser._id, email: Nuser.email });
       }
     } catch (error) {
       console.log(error);
