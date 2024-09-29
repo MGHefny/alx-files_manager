@@ -34,7 +34,7 @@ class UsersController {
     }
   }
 
-  static async getMe(req, res) {
+  /*static async getMe(req, res) {
     try {
       const TokUser = req.header('X-Token');
       const UKey = `auth_${TokUser}`;
@@ -48,7 +48,7 @@ class UsersController {
       console.log(error);
       res.status(500).json({ error: 'error server not res' });
     }
-  }
+  }*/
 }
 
 export default UsersController;
