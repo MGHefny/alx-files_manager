@@ -1,4 +1,4 @@
-import sha1 from 'sha1';
+import SHA1 from 'SHA1';
 import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
@@ -13,7 +13,7 @@ class UsersController {
       res.status(400).json({ error: 'Missing password' });
     }
 
-    const hashapass = sha1(password);
+    const hashapass = SHA1(password);
 
     try {
       const allData = dbClient.db.collection('users');
