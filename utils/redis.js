@@ -1,3 +1,4 @@
+/* Redis utils */
 import { createClient } from 'redis';
 import { promisify } from 'util';
 
