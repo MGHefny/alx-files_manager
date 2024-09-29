@@ -17,7 +17,7 @@ class UsersController {
     const hashapass = sha1(password);
 
     try {
-      const allData = dbClient.collection('users');
+      const allData = dbClient.db.collection('users');
       const infoU = await allData.findOne({ email });
 
       if (infoU) {
