@@ -2,9 +2,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { promises as fs } from 'fs';
 import { ObjectID } from 'mongodb';
+import Bull from 'bull';
 import mime from 'mime-types';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
+
+const Qfile = new Bull('fileQueue');
 
 class FilesController {
   static async getUser(req) {
@@ -64,8 +67,8 @@ class FilesController {
           parentId: parentId || 0,
           isPublic,
         },
-      ).then((result) => res.status(201).json({
-        id: result.insertedId,
+      ).then((output) => res.status(201).json({
+        id: output.insertedId,
         userId: infoU._id,
         name,
         type,
@@ -97,10 +100,10 @@ class FilesController {
           parentId: parentId || 0,
           localPath: Nfile,
         },
-      ).then((result) => {
+      ).then((output) => {
         res.status(201).json(
           {
-            id: result.insertedId,
+            id: output.insertedId,
             userId: infoU._id,
             name,
             type,
@@ -108,6 +111,14 @@ class FilesController {
             parentId: parentId || 0,
           },
         );
+        if (type === 'image') {
+          Qfile.add(
+            {
+              userId: infoU._id,
+              fileId: output.insertedId,
+            },
+          );
+        }
       }).catch((error) => console.log(error));
     }
     return null;
@@ -158,9 +169,9 @@ class FilesController {
           },
         },
       ],
-    ).toArray((eror, result) => {
-      if (result) {
-        const final = result[0].data.map((file) => {
+    ).toArray((eror, output) => {
+      if (output) {
+        const final = output[0].data.map((file) => {
           const tmpFile = {
             ...file,
             id: file._id,
