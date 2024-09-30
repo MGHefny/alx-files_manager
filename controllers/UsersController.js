@@ -1,10 +1,8 @@
+/* Create a new user */
 import sha1 from 'sha1';
 import { ObjectID } from 'mongodb';
-//import Queue from 'bull';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-
-//const UQ = new Queue('userQueue', 'redis://127.0.0.1:6379');
 
 class UsersController {
   static postNew(req, res) {
@@ -33,7 +31,6 @@ class UsersController {
           },
         ).then((output) => {
           res.status(201).json({ id: output.insertedId, email });
-          //UQ.add({ UId: output.insertedId });
         }).catch((error) => console.log(error));
       }
     });
