@@ -34,7 +34,7 @@ class UsersController {
       }
     });
   }
-
+/*Authenticate a user*/
   static async getMe(req, res) {
     const TokUser = req.header('X-Token');
     const UKey = `auth_${TokUser}`;
@@ -46,12 +46,12 @@ class UsersController {
         if (infoU) {
           res.status(200).json({ id: UId, email: infoU.email });
         } else {
-          res.status(401).json({ error: 'error server not res' });
+          res.status(401).json({ error: 'Unauthorized' });
         }
       });
     } else {
       console.log('eror');
-      res.status(401).json({ error: 'error server not res' });
+      res.status(401).json({ error: 'Unauthorized' });
     }
   }
 }
