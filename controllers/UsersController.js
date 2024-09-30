@@ -1,8 +1,11 @@
 /* Create a new user */
 import sha1 from 'sha1';
 import { ObjectId } from 'mongodb';
+import Queue from 'bull';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
+
+const userQueue = new Queue('userQueue', 'redis://127.0.0.1:6379');
 
 class UsersController {
   static async postNew(req, res) {
@@ -14,18 +17,18 @@ class UsersController {
       res.status(400).json({ error: 'Missing password' });
     }
 
-    
+    const hashapass = sha1(password);
 
     try {
       const allData = dbClient.db.collection('users');
       const infoU = await allData.findOne({ email });
-      const hashapass = sha1(password);
 
       if (infoU) {
         res.status(400).json({ error: 'Already exist' });
       } else {
         await allData.insertOne({ email, password: hashapass }).then((output) => {
           res.status(201).json({ id: output.insertedId, email });
+          userQueue.add({ userId: result.insertedId });
         });
       }
     } catch (error) {
