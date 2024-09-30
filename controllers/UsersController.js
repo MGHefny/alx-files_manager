@@ -34,7 +34,8 @@ class UsersController {
       }
     });
   }
-/*Authenticate a user*/
+
+  /* Authenticate a user */
   static async getMe(req, res) {
     const TokUser = req.header('X-Token');
     const UKey = `auth_${TokUser}`;

@@ -18,11 +18,11 @@ class AuthController {
     }
     const hashpass = sha1(info[1]);
     const allUser = dbClient.db.collection('users');
-    allUser.findOne({ email: info[0], password: hashpass }, async (eror, UId) => {
-      if (UId) {
+    allUser.findOne({ email: info[0], password: hashpass }, async (eror, infoU) => {
+      if (infoU) {
         const TokUser = uuidv4();
         const UKey = `auth_${TokUser}`;
-        await redisClient.set(UKey, UId._id.toString(), 60 * 60 * 24);
+        await redisClient.set(UKey, infoU._id.toString(), 60 * 60 * 24);
         res.status(200).json({ TokUser });
       } else {
         res.status(401).json({ error: 'Unauthorized' });
