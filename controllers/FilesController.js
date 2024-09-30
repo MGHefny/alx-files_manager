@@ -238,8 +238,8 @@ class FilesController {
             Nfile = `${file.localPath}_${size}`;
           }
           const data = await fs.readFile(Nfile);
-          const contentType = mime.contentType(file.name);
-          return res.header('Content-Type', contentType).status(200).send(data);
+          const conT = mime.contentType(file.name);
+          return res.header('Content-Type', conT).status(200).send(data);
         } catch (error) {
           console.log(error);
           return res.status(404).json({ error: 'Not found' });
@@ -259,8 +259,8 @@ class FilesController {
             if (size) {
               Nfile = `${file.localPath}_${size}`;
             }
-            const contentType = mime.contentType(file.name);
-            return res.header('Content-Type', contentType).status(200).sendFile(Nfile);
+            const conT = mime.contentType(file.name);
+            return res.header('Content-Type', conT).status(200).sendFile(Nfile);
           } catch (error) {
             console.log(error);
             return res.status(404).json({ error: 'Not found' });
