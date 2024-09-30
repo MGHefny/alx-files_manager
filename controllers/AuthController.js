@@ -20,10 +20,10 @@ class AuthController {
     const allUser = dbClient.db.collection('users');
     allUser.findOne({ email: info[0], password: hashpass }, async (eror, infoU) => {
       if (infoU) {
-        const TokUser = uuidv4();
-        const UKey = `auth_${TokUser}`;
+        const token = uuidv4();
+        const UKey = `auth_${token}`;
         await redisClient.set(UKey, infoU._id.toString(), 60 * 60 * 24);
-        res.status(200).json({ TokUser });
+        res.status(200).json({ token });
       } else {
         res.status(401).json({ error: 'Unauthorized' });
       }
@@ -32,8 +32,8 @@ class AuthController {
 
   /* Authenticate a user disconnect */
   static async getDisconnect(req, res) {
-    const TokUser = req.header('X-Token');
-    const UKey = `auth_${TokUser}`;
+    const token = req.header('X-Token');
+    const UKey = `auth_${token}`;
     const iddU = await redisClient.get(UKey);
     if (iddU) {
       await redisClient.del(UKey);

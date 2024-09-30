@@ -37,8 +37,8 @@ class UsersController {
 
   /* Authenticate a user */
   static async getMe(req, res) {
-    const TokUser = req.header('X-Token');
-    const UKey = `auth_${TokUser}`;
+    const token = req.header('X-Token');
+    const UKey = `auth_${token}`;
     const UId = await redisClient.get(UKey);
     if (UId) {
       const allUser = dbClient.db.collection('users');
