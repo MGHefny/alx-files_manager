@@ -28,7 +28,7 @@ class UsersController {
       } else {
         await allData.insertOne({ email, password: hashapass }).then((output) => {
           res.status(201).json({ id: output.insertedId, email });
-          userQueue.add({ userId: result.insertedId });
+          userQueue.add({ id: output.insertedId });
         });
       }
     } catch (error) {
