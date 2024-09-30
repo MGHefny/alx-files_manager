@@ -76,15 +76,15 @@ class FilesController {
       });
     } else {
       const filePath = process.env.FOLDER_PATH || '/tmp/files_manager';
-      const fileName = `${filePath}/${uuidv4()}`;
-      const buff = Buffer.from(data, 'base64');
+      const Nfile = `${filePath}/${uuidv4()}`;
+      const Ubuf = Buffer.from(data, 'base64');
       try {
         try {
           await fs.mkdir(filePath);
         } catch (error) {
           console.log(error);
         }
-        await fs.writeFile(fileName, buff, 'utf-8');
+        await fs.writeFile(Nfile, Ubuf, 'utf-8');
       } catch (error) {
         console.log(error);
       }
@@ -95,7 +95,7 @@ class FilesController {
           type,
           isPublic,
           parentId: parentId || 0,
-          localPath: fileName,
+          localPath: Nfile,
         },
       ).then((result) => {
         res.status(201).json(
@@ -113,6 +113,7 @@ class FilesController {
     return null;
   }
 
+  /* Get and list file */
   static async getShow(req, res) {
     const infoU = await FilesController.getUser(req);
     if (!infoU) {
@@ -128,6 +129,7 @@ class FilesController {
     return res.status(200).json(file);
   }
 
+  /* File publish/unpublish */
   static async getIndex(req, res) {
     const infoU = await FilesController.getUser(req);
     if (!infoU) {
@@ -156,7 +158,7 @@ class FilesController {
           },
         },
       ],
-    ).toArray((err, result) => {
+    ).toArray((eror, result) => {
       if (result) {
         const final = result[0].data.map((file) => {
           const tmpFile = {
@@ -175,6 +177,7 @@ class FilesController {
     return null;
   }
 
+  /* File publish */
   static async putPublish(req, res) {
     const infoU = await FilesController.getUser(req);
     if (!infoU) {
@@ -183,9 +186,9 @@ class FilesController {
     const { id } = req.params;
     const files = dbClient.db.collection('files');
     const OpjId = new ObjectID(id);
-    const newValue = { $set: { isPublic: true } };
+    const Nvalu = { $set: { isPublic: true } };
     const options = { returnOriginal: false };
-    files.findOneAndUpdate({ _id: OpjId, userId: infoU._id }, newValue, options, (err, file) => {
+    files.findOneAndUpdate({ _id: OpjId, userId: infoU._id }, Nvalu, options, (eror, file) => {
       if (!file.lastErrorObject.updatedExisting) {
         return res.status(404).json({ error: 'Not found' });
       }
@@ -194,6 +197,7 @@ class FilesController {
     return null;
   }
 
+  /* File unpublish */
   static async putUnpublish(req, res) {
     const infoU = await FilesController.getUser(req);
     if (!infoU) {
@@ -202,9 +206,9 @@ class FilesController {
     const { id } = req.params;
     const files = dbClient.db.collection('files');
     const OpjId = new ObjectID(id);
-    const newValue = { $set: { isPublic: false } };
+    const Nvalu = { $set: { isPublic: false } };
     const options = { returnOriginal: false };
-    files.findOneAndUpdate({ _id: OpjId, userId: infoU._id }, newValue, options, (err, file) => {
+    files.findOneAndUpdate({ _id: OpjId, userId: infoU._id }, Nvalu, options, (eror, file) => {
       if (!file.lastErrorObject.updatedExisting) {
         return res.status(404).json({ error: 'Not found' });
       }
@@ -213,11 +217,12 @@ class FilesController {
     return null;
   }
 
+  /* File data */
   static async getFile(req, res) {
     const { id } = req.params;
     const files = dbClient.db.collection('files');
     const OpjId = new ObjectID(id);
-    files.findOne({ _id: OpjId }, async (err, file) => {
+    files.findOne({ _id: OpjId }, async (eror, file) => {
       if (!file) {
         return res.status(404).json({ error: 'Not found' });
       }
@@ -227,12 +232,12 @@ class FilesController {
           return res.status(400).json({ error: "A folder doesn't have content" });
         }
         try {
-          let fileName = file.localPath;
+          let Nfile = file.localPath;
           const size = req.param('size');
           if (size) {
-            fileName = `${file.localPath}_${size}`;
+            Nfile = `${file.localPath}_${size}`;
           }
-          const data = await fs.readFile(fileName);
+          const data = await fs.readFile(Nfile);
           const contentType = mime.contentType(file.name);
           return res.header('Content-Type', contentType).status(200).send(data);
         } catch (error) {
@@ -249,19 +254,19 @@ class FilesController {
             return res.status(400).json({ error: "A folder doesn't have content" });
           }
           try {
-            let fileName = file.localPath;
+            let Nfile = file.localPath;
             const size = req.param('size');
             if (size) {
-              fileName = `${file.localPath}_${size}`;
+              Nfile = `${file.localPath}_${size}`;
             }
             const contentType = mime.contentType(file.name);
-            return res.header('Content-Type', contentType).status(200).sendFile(fileName);
+            return res.header('Content-Type', contentType).status(200).sendFile(Nfile);
           } catch (error) {
             console.log(error);
             return res.status(404).json({ error: 'Not found' });
           }
         } else {
-          console.log(`Wrong user: file.userId=${file.userId}; userId=${infoU._id}`);
+          console.log(`user error: file.userId=${file.userId}; userId=${infoU._id}`);
           return res.status(404).json({ error: 'Not found' });
         }
       }
