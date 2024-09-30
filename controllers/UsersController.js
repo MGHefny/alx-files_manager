@@ -14,11 +14,12 @@ class UsersController {
       res.status(400).json({ error: 'Missing password' });
     }
 
-    const hashapass = sha1(password);
+    
 
     try {
       const allData = dbClient.db.collection('users');
       const infoU = await allData.findOne({ email });
+      const hashapass = sha1(password);
 
       if (infoU) {
         res.status(400).json({ error: 'Already exist' });
